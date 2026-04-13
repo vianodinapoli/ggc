@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GGC SERVICES E.I</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SCREEN UI
+============================================================ */
+:root {
+  --sidebar: #0b1120;
+  --accent: #1d6aff;
+  --accent-h: #1558e0;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --input-bg: #f8fafc;
+  --radius: 10px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.06);
+  --danger: #ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:248px;background:var(--sidebar);min-height:100vh;position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column;}
+.sb-brand{padding:26px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.sb-brand .logo{width:42px;height:42px;background:var(--accent);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:10px;}
+.sb-brand h2{font-size:14px;font-weight:700;color:#fff;}
+.sb-brand p{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;}
+.sb-section{padding:16px 12px 6px;}
+.sb-lbl{font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:0 8px;display:block;margin-bottom:4px;}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,0.55);transition:all .16s;margin-bottom:1px;border:none;background:transparent;width:100%;text-align:left;font-family:inherit;}
+.sb-item:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.sb-item.active{background:var(--accent);color:#fff;}
+.sb-item .si{font-size:15px;width:18px;text-align:center;}
+.sb-div{height:1px;background:rgba(255,255,255,0.06);margin:8px 12px;}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;}
+.topbar h1{font-size:17px;font-weight:700;}
+.topbar p{font-size:12px;color:var(--muted);margin-top:1px;}
+.tb-right{display:flex;gap:8px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;border:none;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .16s;white-space:nowrap;}
+.btn-p{background:var(--accent);color:#fff;}
+.btn-p:hover{background:var(--accent-h);}
+.btn-g{background:transparent;color:var(--text);border:1.5px solid var(--border);}
+.btn-g:hover{background:var(--bg);}
+.btn-sm{padding:7px 12px;font-size:12px;}
+
+/* CONTENT */
+.content{flex:1;padding:24px 28px;overflow-y:auto;}
+.view{display:none;}
+.view.active{display:block;}
+
+/* CARDS */
+.card{background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:18px;}
+.card-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+
+/* DOC TYPE */
+.dt-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.dt-btn{border:2px solid var(--border);border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;background:var(--input-bg);transition:all .16s;}
+.dt-btn:hover,.dt-btn.active{border-color:var(--accent);background:#eff6ff;}
+.dt-btn .dti{font-size:24px;margin-bottom:5px;}
+.dt-btn .dtl{font-size:13px;font-weight:700;}
+.dt-btn .dts{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* FORM */
+.fg{margin-bottom:13px;}
+.fg label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px;}
+.fc{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--input-bg);font-family:inherit;font-size:13.5px;color:var(--text);outline:none;transition:border-color .14s;}
+.fc:focus{border-color:var(--accent);background:#fff;}
+textarea.fc{resize:vertical;min-height:72px;}
+
+/* ITEMS TABLE */
+.it{width:100%;border-collapse:collapse;font-size:13px;}
+.it thead th{background:#f1f5f9;padding:9px 10px;text-align:left;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;border-bottom:2px solid var(--border);}
+.it tbody td{padding:6px 4px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.it tbody tr:last-child td{border-bottom:none;}
+.ii{width:100%;border:1.5px solid transparent;border-radius:6px;padding:7px 9px;font-family:inherit;font-size:13px;background:transparent;color:var(--text);transition:all .14s;}
+.ii:focus{border-color:var(--accent);background:#fff;outline:none;}
+.it-total{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;text-align:right;padding-right:8px;}
+.rm-btn{background:#fee2e2;color:var(--danger);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .14s;margin:auto;}
+.rm-btn:hover{background:var(--danger);color:#fff;}
+
+/* TOTALS */
+.tot-wrap{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+.tot-tbl{width:100%;}
+.tot-tbl td{padding:6px 0;font-size:13.5px;}
+.tot-tbl td:last-child{text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;}
+.tot-grand td{font-size:16px;font-weight:700;color:var(--accent);border-top:2px solid var(--border);padding-top:10px;}
+.extenso{font-size:12px;color:var(--muted);font-style:italic;line-height:1.5;}
+.extenso b{color:var(--text);}
+
+/* HISTORY */
+.h-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:9px;background:var(--bg);margin-bottom:7px;cursor:pointer;transition:background .14s;}
+.h-item:hover{background:#e0edff;}
+.h-ref{font-size:13px;font-weight:700;}
+.h-cl{font-size:11.5px;color:var(--muted);}
+.h-amt{font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;text-align:right;}
+.h-dt{font-size:11px;color:var(--muted);}
+
+/* LOGO UPLOAD */
+.logo-box{width:90px;height:90px;border-radius:10px;border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .16s;overflow:hidden;background:var(--bg);flex-shrink:0;}
+.logo-box:hover{border-color:var(--accent);}
+.logo-box img{width:100%;height:100%;object-fit:contain;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#0b1120;color:#fff;padding:11px 18px;border-radius:9px;font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .24s;z-index:9999;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 16px;color:var(--muted);}
+.empty .ei{font-size:44px;opacity:.3;margin-bottom:10px;}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:100;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto;}
+.overlay.open{display:flex;}
+.ov-wrap{background:#d1d5db;border-radius:12px;overflow:hidden;width:860px;max-width:100%;}
+.ov-bar{background:#0b1120;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+.ov-bar span{color:#fff;font-size:14px;font-weight:600;}
+.ov-body{padding:20px;display:flex;justify-content:center;}
+
+/* ============================================================
+   DOCUMENT OUTPUT — replica fiel do PDF de referência
+============================================================ */
+#doc-out{
+  width:794px;min-height:1000px;background:#fff;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size:11px;color:#000;line-height:1.4;
+  padding:40px 44px;
+  box-shadow:0 0 40px rgba(0,0,0,0.18);
+}
+
+.d-header{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid #000;}
+.d-logo-wrap{display:flex;align-items:center;gap:12px;}
+.d-logo-img{width:68px;height:68px;object-fit:contain;}
+.d-logo-ph{width:68px;height:68px;background:#111;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;}
+.d-co h2{font-size:13px;font-weight:700;margin-bottom:3px;}
+.d-co p{font-size:10.5px;color:#333;line-height:1.65;}
+.d-right{text-align:right;}
+.d-type{font-size:30px;font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1;}
+.d-orig{font-size:10px;color:#555;text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;}
+.d-num{font-size:14px;font-weight:700;margin-top:3px;font-family:monospace;letter-spacing:0.02em;}
+
+.d-para{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid #ccc;margin-bottom:0;}
+.d-para-lbl{font-size:10.5px;font-weight:700;margin-bottom:4px;}
+.d-para-info{font-size:10.5px;line-height:1.7;color:#000;}
+.d-para-dates{text-align:right;font-size:10.5px;line-height:1.9;}
+
+.d-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:10.5px;}
+.d-table thead tr{background:#000;}
+.d-table thead th{padding:8px 10px;font-size:10px;font-weight:700;color:#fff;text-align:left;letter-spacing:0.02em;}
+.d-table thead th.r{text-align:right;}
+.d-table thead th.c{text-align:center;}
+.d-table tbody td{padding:9px 10px;border-bottom:1px solid #d1d5db;vertical-align:top;}
+.d-table tbody td.r{text-align:right;}
+.d-table tbody td.c{text-align:center;}
+.d-table tbody tr:nth-child(even) td{background:#f9fafb;}
+.d-ref{font-weight:700;font-size:10px;font-family:monospace;}
+.d-desc-title{font-weight:600;margin-bottom:2px;}
+.d-desc-body{color:#374151;line-height:1.65;white-space:pre-wrap;font-size:10px;}
+.d-period{font-weight:700;font-size:9.5px;letter-spacing:0.07em;margin-top:6px;display:block;}
+
+.d-bottom{display:grid;grid-template-columns:1fr 245px;gap:24px;margin-top:16px;align-items:start;}
+.d-note{font-size:10.5px;line-height:1.7;color:#374151;}
+.d-note strong{display:block;font-weight:700;color:#000;margin-bottom:4px;font-size:10.5px;}
+.d-tots{}
+.d-tot-row{display:flex;justify-content:space-between;padding:5px 0;font-size:10.5px;border-bottom:1px solid #e5e7eb;}
+.d-tot-row:last-child{border-bottom:none;}
+.d-tot-row.grand{font-weight:700;font-size:13px;border-top:2px solid #000;border-bottom:none;padding-top:7px;margin-top:2px;}
+.d-tot-row span:last-child{font-family:monospace;font-weight:700;}
+
+.d-extenso{margin-top:14px;padding-top:10px;border-top:1px solid #e5e7eb;font-size:10.5px;}
+.d-extenso b{font-weight:700;}
+
+.d-bank{margin-top:18px;border:1px solid #d1d5db;}
+.d-bank-title{padding:7px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid #d1d5db;background:#f9fafb;}
+.d-bank-body{padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;}
+.d-brow{font-size:10.5px;line-height:1.65;}
+.d-brow span{font-weight:700;}
+
+.d-footer{margin-top:20px;padding-top:8px;border-top:1px solid #d1d5db;display:flex;justify-content:space-between;align-items:center;font-size:9px;color:#6b7280;}
+.d-processed{font-size:9px;color:#9ca3af;text-align:center;margin-top:4px;}
+
+@media print {
+  body * { visibility:hidden; }
+  #doc-out, #doc-out * { visibility:visible; }
+  #doc-out {
+    position:fixed;inset:0;box-shadow:none;
+    padding:16mm 16mm;width:100%;min-height:auto;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="logo">🚗</div>
+    <h2 id="sb-name">CarWash Pro</h2>
+    <p>Gestão de Documentos</p>
+  </div>
+  <div class="sb-section">
+    <span class="sb-lbl">Menu</span>
+    <button class="sb-item active" onclick="goView('editor',this)"><span class="si">✏️</span> Novo Documento</button>
+    <button class="sb-item" onclick="goView('history',this)"><span class="si">📋</span> Histórico</button>
+  </div>
+  <div class="sb-div"></div>
+  <div class="sb-section">
+    <span class="sb-lbl">Configuração</span>
+    <button class="sb-item" onclick="goView('settings',this)"><span class="si">⚙️</span> Dados da Empresa</button>
+    <button class="sb-item" onclick="goView('bank',this)"><span class="si">🏦</span> Dados Bancários</button>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <h1 id="tb-title">Novo Documento</h1>
+      <p id="tb-sub">Crie facturas, cotações e recibos profissionais</p>
+    </div>
+    <div class="tb-right" id="tb-actions">
+      <button class="btn btn-g" onclick="clearForm()">🗑 Limpar</button>
+      <button class="btn btn-g" onclick="saveDoc()">💾 Guardar</button>
+      <button class="btn btn-p" onclick="openPreview()">👁 Pré-visualizar &amp; Imprimir</button>
+    </div>
+  </div>
+
+  <!-- EDITOR -->
+  <div class="content view active" id="view-editor">
+    <div class="card">
+      <div class="card-head">Tipo de Documento</div>
+      <div class="dt-row">
+        <div class="dt-btn active" onclick="setType('factura',this)">
+          <div class="dti">🧾</div><div class="dtl">Factura</div><div class="dts">Documento fiscal</div>
+        </div>
+        <div class="dt-btn" onclick="setType('cotacao',this)">
+          <div class="dti">📊</div><div class="dtl">Cotação</div><div class="dts">Proposta comercial</div>
+        </div>
+        <div class="dt-btn" onclick="setType('recibo',this)">
+          <div class="dti">✅</div><div class="dtl">Recibo</div><div class="dts">Confirmação de pag.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-head">Informações do Documento</div>
+        <div class="fg"><label>Nº do Documento</label><input class="fc" id="f-num" placeholder="FAC/0001/2026"></div>
+        <div class="g2">
+          <div class="fg"><label>Data de Emissão</label><input class="fc" type="date" id="f-date"></div>
+          <div class="fg"><label id="lbl-exp">Data de Validade</label><input class="fc" type="date" id="f-expire"></div>
+        </div>
+        <div class="fg"><label>Emitido Por</label><input class="fc" id="f-by" placeholder="Nome do responsável"></div>
+        <div class="fg"><label>Nota / Observações</label><textarea class="fc" id="f-note" placeholder="Condições, prazo de confirmação..."></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-head">Dados do Cliente</div>
+        <div class="fg"><label>Nome / Empresa</label><input class="fc" id="c-name" placeholder="Nome do cliente ou empresa"></div>
+        <div class="fg"><label>NUIT</label><input class="fc" id="c-nuit" placeholder="400000000"></div>
+        <div class="fg"><label>Cidade / Endereço</label><input class="fc" id="c-addr" placeholder="Cidade da Beira"></div>
+        <div class="fg"><label>Email / Telefone</label><input class="fc" id="c-contact" placeholder="email ou telefone"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        Itens / Serviços
+        <button class="btn btn-p btn-sm" onclick="addItem()">+ Adicionar Item</button>
+      </div>
+      <table class="it">
+        <thead>
+          <tr>
+            <th style="width:4%">#</th>
+            <th style="width:36%">Descrição</th>
+            <th style="width:10%">Período</th>
+            <th style="width:7%">Qtd.</th>
+            <th style="width:13%">Preço (MZN)</th>
+            <th style="width:7%">Desc%</th>
+            <th style="width:7%">IVA%</th>
+            <th style="width:12%">Total</th>
+            <th style="width:4%">—</th>
+          </tr>
+        </thead>
+        <tbody id="items-body"></tbody>
+      </table>
+      <div class="tot-wrap">
+        <div class="extenso" id="extenso"></div>
+        <table class="tot-tbl">
+          <tr><td>Subtotal</td><td id="t-sub">0,00 MZN</td></tr>
+          <tr><td>Desconto comercial</td><td id="t-disc">0,00 MZN</td></tr>
+          <tr><td>Desconto financeiro</td><td>0,00 MZN</td></tr>
+          <tr><td>Base tributável</td><td id="t-base">0,00 MZN</td></tr>
+          <tr><td>IVA</td><td id="t-iva">0,00 MZN</td></tr>
+          <tr class="tot-grand"><td>Total com IVA</td><td id="t-grand">0,00 MZN</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="content view" id="view-history">
+    <div class="card">
+      <div class="card-head">Documentos Guardados</div>
+      <div id="hist-list"><div class="empty"><div class="ei">📂</div><p>Nenhum documento guardado.</p></div></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="content view" id="view-settings">
+    <div class="card" style="max-width:600px">
+      <div class="card-head">Dados da Minha Empresa</div>
+      <div style="display:flex;gap:20px;align-items:flex-start;margin-bottom:16px">
+        <div>
+          <div class="logo-box" onclick="document.getElementById('logo-up').click()" id="logo-box">
+            <span style="font-size:28px">🚗</span>
+            <span style="font-size:10px;color:var(--muted);margin-top:4px">Logo</span>
+          </div>
+          <input type="file" id="logo-up" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+        </div>
+        <div style="flex:1">
+          <div class="fg"><label>Nome da Empresa</label><input class="fc" id="s-name" placeholder="CarWash Express Lda"></div>
+          <div class="fg"><label>NUIT</label><input class="fc" id="s-nuit" placeholder="401234567"></div>
+        </div>
+      </div>
+      <div class="fg"><label>Endereço</label><input class="fc" id="s-addr" placeholder="Bairro, Rua, Cidade"></div>
+      <div class="g2">
+        <div class="fg"><label>Email</label><input class="fc" id="s-email" placeholder="info@carwash.co.mz"></div>
+        <div class="fg"><label>Telefone</label><input class="fc" id="s-phone" placeholder="+258 8x xxx xxxx"></div>
+      </div>
+      <button class="btn btn-p" onclick="saveSettings()">💾 Guardar</button>
+    </div>
+  </div>
+
+  <!-- BANK -->
+  <div class="content view" id="view-bank">
+    <div class="card" style="max-width:600px">
+      <div class="card-head">Dados Bancários</div>
+      <div class="fg"><label>Nome do Banco</label><input class="fc" id="b-bank" placeholder="BCI, BIM, Standard Bank..."></div>
+      <div class="fg"><label>Titular da Conta</label><input class="fc" id="b-holder" placeholder="Nome conforme banco"></div>
+      <div class="g2">
+        <div class="fg"><label>Número de Conta</label><input class="fc" id="b-acc" placeholder="000000000000000"></div>
+        <div class="fg"><label>NIB</label><input class="fc" id="b-nib" placeholder="000800001..."></div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label>NUIB</label><input class="fc" id="b-nuib" placeholder="2025000005..."></div>
+        <div class="fg"><label>Código SWIFT</label><input class="fc" id="b-swift" placeholder="CGDIMZMA"></div>
+      </div>
+      <div class="fg"><label>IBAN</label><input class="fc" id="b-iban" placeholder="MZ59000800001..."></div>
+      <button class="btn btn-p" onclick="saveBank()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="ov-wrap">
+    <div class="ov-bar">
+      <span>📄 Pré-visualização do Documento</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-p btn-sm" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+        <button class="btn btn-g btn-sm" style="color:#fff;border-color:rgba(255,255,255,.25)" onclick="closePreview()">✕ Fechar</button>
+      </div>
+    </div>
+    <div class="ov-body"><div id="doc-out"></div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<script>
+/* ─── STATE ─────────────────────────────────────────────── */
+const S = {
+  type : 'factura',
+  co   : JSON.parse(localStorage.getItem('cw_co')  || '{}'),
+  bk   : JSON.parse(localStorage.getItem('cw_bk')  || '{}'),
+  logo : localStorage.getItem('cw_logo') || '',
+  hist : JSON.parse(localStorage.getItem('cw_hist') || '[]'),
+};
+let IC = 0;
+
+const TYPES = {
+  factura : { lbl:'Factura', pre:'FAC', icon:'🧾', expLbl:'Data de Vencimento' },
+  cotacao : { lbl:'Cotação', pre:'COT', icon:'📊', expLbl:'Data de Expiração'  },
+  recibo  : { lbl:'Recibo',  pre:'REC', icon:'✅', expLbl:'Data de Pagamento'  },
+};
+
+/* ─── INIT ───────────────────────────────────────────────── */
+window.addEventListener('load', () => {
+  const today = new Date();
+  gi('f-date').value = iso(today);
+  const exp = new Date(); exp.setDate(exp.getDate()+30);
+  gi('f-expire').value = iso(exp);
+  loadUI();
+  autoNum();
+  addItem();
+  renderHist();
+});
+
+function iso(d){ return d.toISOString().split('T')[0]; }
+
+function autoNum(){
+  const { pre } = TYPES[S.type];
+  const y  = new Date().getFullYear();
+  const seq = String(S.hist.filter(h=>h.type===S.type).length + 1).padStart(4,'0');
+  gi('f-num').value = `${pre}/${seq}/${y}`;
+}
+
+function loadUI(){
+  const map = {
+    's-name':S.co.name, 's-nuit':S.co.nuit, 's-addr':S.co.addr, 's-email':S.co.email, 's-phone':S.co.phone,
+    'b-bank':S.bk.bank, 'b-holder':S.bk.holder, 'b-acc':S.bk.acc, 'b-nib':S.bk.nib,
+    'b-nuib':S.bk.nuib, 'b-swift':S.bk.swift, 'b-iban':S.bk.iban
+  };
+  for(const [id, val] of Object.entries(map)) { const el=gi(id); if(el && val) el.value=val; }
+  if(S.co.name) gi('sb-name').textContent = S.co.name;
+  if(S.logo) gi('logo-box').innerHTML = `<img src="${S.logo}">`;
+}
+
+/* ─── VIEWS ─────────────────────────────────────────────── */
+function goView(v, btn){
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  gi('view-'+v).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  btn.classList.add('active');
+  const titles = { editor:'Novo Documento', history:'Histórico', settings:'Dados da Empresa', bank:'Dados Bancários' };
+  const subs   = { editor:'Crie facturas, cotações e recibos profissionais', history:'Todos os documentos guardados', settings:'Configure os dados da sua empresa', bank:'Contas bancárias para os documentos' };
+  gi('tb-title').textContent = titles[v];
+  gi('tb-sub').textContent   = subs[v];
+  gi('tb-actions').style.display = v==='editor' ? 'flex' : 'none';
+  if(v==='history') renderHist();
+}
+
+/* ─── DOC TYPE ───────────────────────────────────────────── */
+function setType(t, el){
+  S.type = t;
+  document.querySelectorAll('.dt-btn').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  gi('lbl-exp').textContent = TYPES[t].expLbl;
+  autoNum();
+}
+
+/* ─── ITEMS ──────────────────────────────────────────────── */
+function addItem(){
+  const id = ++IC;
+  const tr = document.createElement('tr');
+  tr.id = 'ir-'+id;
+  tr.innerHTML = `
+    <td style="text-align:center;color:var(--muted);font-size:10.5px;font-family:monospace">${String(id).padStart(4,'0')}</td>
+    <td><textarea class="ii" rows="2" placeholder="Descrição completa do serviço ou produto" oninput="calc()" style="resize:none;min-height:52px"></textarea></td>
+    <td><input class="ii" placeholder="MENSAL / ANUAL" oninput="calc()" style="font-size:11px;text-align:center"></td>
+    <td><input class="ii" type="number" value="1" min="0" step="0.01" oninput="calc()" style="text-align:center"></td>
+    <td><input class="ii" type="number" value="0" min="0" step="0.01" oninput="calc()" style="text-align:right"></td>
+    <td><input class="ii" type="number" value="0" min="0" max="100" oninput="calc()" style="text-align:center"></td>
+    <td><input class="ii" type="number" value="16" min="0" max="100" oninput="calc()" style="text-align:center"></td>
+    <td class="it-total" id="lt-${id}">0,00</td>
+    <td><button class="rm-btn" onclick="rmItem(${id})">✕</button></td>`;
+  gi('items-body').appendChild(tr);
+  calc();
+}
+
+function rmItem(id){ gi('ir-'+id)?.remove(); calc(); }
+
+function getItems(){
+  return Array.from(document.querySelectorAll('#items-body tr')).map(tr => {
+    const ins = tr.querySelectorAll('input,textarea');
+    const qty   = parseFloat(ins[2].value)||0;
+    const price = parseFloat(ins[3].value)||0;
+    const disc  = parseFloat(ins[4].value)||0;
+    const iva   = parseFloat(ins[5].value)||0;
+    const base  = qty * price * (1 - disc/100);
+    const ivaAmt = base * (iva/100);
+    return { desc:ins[0].value.trim(), period:ins[1].value.trim(), qty, price, disc, iva, base, ivaAmt, total:base+ivaAmt, id:tr.id };
+  });
+}
+
+function calc(){
+  const items = getItems();
+  let sub=0, disc=0, iva=0;
+  items.forEach((it,i) => {
+    sub  += it.qty * it.price;
+    disc += it.qty * it.price * (it.disc/100);
+    iva  += it.ivaAmt;
+    const el = document.querySelectorAll('#items-body tr')[i]?.querySelector('.it-total');
+    if(el) el.textContent = fmt(it.total);
+  });
+  const base=sub-disc, grand=base+iva;
+  gi('t-sub').textContent   = fmt(sub)   +' MZN';
+  gi('t-disc').textContent  = fmt(disc)  +' MZN';
+  gi('t-base').textContent  = fmt(base)  +' MZN';
+  gi('t-iva').textContent   = fmt(iva)   +' MZN';
+  gi('t-grand').textContent = fmt(grand) +' MZN';
+  gi('extenso').innerHTML   = grand>0 ? `<b>Valor por extenso:</b> ${n2w(grand)}` : '';
+}
+
+/* ─── SAVE ───────────────────────────────────────────────── */
+function saveDoc(){
+  S.hist.unshift(buildData());
+  localStorage.setItem('cw_hist', JSON.stringify(S.hist));
+  toast('💾 Documento guardado no histórico!');
+}
+
+function saveSettings(){
+  S.co = { name:gv('s-name'), nuit:gv('s-nuit'), addr:gv('s-addr'), email:gv('s-email'), phone:gv('s-phone') };
+  localStorage.setItem('cw_co', JSON.stringify(S.co));
+  gi('sb-name').textContent = S.co.name || 'CarWash Pro';
+  toast('✅ Dados da empresa guardados!');
+}
+
+function saveBank(){
+  S.bk = { bank:gv('b-bank'), holder:gv('b-holder'), acc:gv('b-acc'), nib:gv('b-nib'), nuib:gv('b-nuib'), swift:gv('b-swift'), iban:gv('b-iban') };
+  localStorage.setItem('cw_bk', JSON.stringify(S.bk));
+  toast('✅ Dados bancários guardados!');
+}
+
+function uploadLogo(inp){
+  const f = inp.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    S.logo = e.target.result;
+    localStorage.setItem('cw_logo', S.logo);
+    gi('logo-box').innerHTML = `<img src="${S.logo}">`;
+    toast('🖼 Logo carregado!');
+  };
+  r.readAsDataURL(f);
+}
+
+function buildData(){
+  const items = getItems();
+  let sub=0,disc=0,iva=0;
+  items.forEach(it=>{ sub+=it.qty*it.price; disc+=it.qty*it.price*(it.disc/100); iva+=it.ivaAmt; });
+  const base=sub-disc, grand=base+iva;
+  return {
+    id:Date.now(), type:S.type,
+    num:gv('f-num'), date:gv('f-date'), expire:gv('f-expire'), by:gv('f-by'), note:gv('f-note'),
+    client:{ name:gv('c-name'), nuit:gv('c-nuit'), addr:gv('c-addr'), contact:gv('c-contact') },
+    items, sub, disc, base, iva, grand,
+    co:{...S.co}, bk:{...S.bk}, logo:S.logo
+  };
+}
+
+function clearForm(){
+  ['f-num','f-by','f-note','c-name','c-nuit','c-addr','c-contact'].forEach(id=>{ const el=gi(id); if(el) el.value=''; });
+  gi('items-body').innerHTML=''; IC=0; addItem(); autoNum(); calc();
+}
+
+/* ─── HISTORY ─────────────────────────────────────────────── */
+function renderHist(){
+  const el = gi('hist-list');
+  if(!S.hist.length){ el.innerHTML='<div class="empty"><div class="ei">📂</div><p>Nenhum documento guardado.</p></div>'; return; }
+  el.innerHTML = S.hist.map(d => {
+    const cfg = TYPES[d.type];
+    return `<div class="h-item" onclick="loadDoc(${d.id})">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:20px">${cfg.icon}</div>
+        <div><div class="h-ref">${esc(d.num||'—')}</div><div class="h-cl">${esc(d.client?.name||'—')}</div></div>
+      </div>
+      <div><div class="h-amt">${fmt(d.grand||0)} MZN</div><div class="h-dt">${fmtDate(d.date)}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function loadDoc(id){
+  const d = S.hist.find(x=>x.id===id); if(!d) return;
+  S.type = d.type;
+  document.querySelectorAll('.dt-btn').forEach((c,i)=>c.classList.toggle('active',['factura','cotacao','recibo'][i]===d.type));
+  gi('f-num').value    = d.num    || '';
+  gi('f-date').value   = d.date   || '';
+  gi('f-expire').value = d.expire || '';
+  gi('f-by').value     = d.by     || '';
+  gi('f-note').value   = d.note   || '';
+  gi('c-name').value   = d.client?.name    || '';
+  gi('c-nuit').value   = d.client?.nuit    || '';
+  gi('c-addr').value   = d.client?.addr    || '';
+  gi('c-contact').value= d.client?.contact || '';
+  gi('items-body').innerHTML=''; IC=0;
+  d.items.forEach(it=>{
+    addItem();
+    const tr  = gi('ir-'+IC);
+    const ins = tr.querySelectorAll('input,textarea');
+    ins[0].value=it.desc; ins[1].value=it.period; ins[2].value=it.qty;
+    ins[3].value=it.price; ins[4].value=it.disc;  ins[5].value=it.iva;
+  });
+  calc();
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  gi('view-editor').classList.add('active');
+  document.querySelectorAll('.sb-item').forEach((b,i)=>b.classList.toggle('active',i===0));
+  gi('tb-title').textContent='Novo Documento';
+  gi('tb-sub').textContent='Crie facturas, cotações e recibos profissionais';
+  gi('tb-actions').style.display='flex';
+  toast('📄 Documento carregado!');
+}
+
+/* ─── PREVIEW ─────────────────────────────────────────────── */
+function openPreview(){
+  gi('doc-out').innerHTML = renderDoc(buildData());
+  gi('overlay').classList.add('open');
+}
+function closePreview(){ gi('overlay').classList.remove('open'); }
+
+function renderDoc(d){
+  const cfg = TYPES[d.type];
+  const c = d.co, b = d.bk;
+
+  // logo
+  const logoH = d.logo
+    ? `<img class="d-logo-img" src="${d.logo}" alt="logo">`
+    : `<div class="d-logo-ph">🚗</div>`;
+
+  // item rows
+  let qty_total = 0;
+  const rowsH = d.items.filter(it=>it.desc).map((it, i) => {
+    qty_total += it.qty;
+    return `<tr>
+      <td class="d-ref">${String(i+1).padStart(4,'0')}</td>
+      <td>
+        <div class="d-desc-title">${esc(it.desc)}</div>
+        ${it.period ? `<div class="d-period">${esc(it.period)}</div>` : ''}
+      </td>
+      <td class="c">${fmt(it.qty)}</td>
+      <td class="r">${fmt(it.price)}</td>
+      <td class="c">${fmt(it.disc)}%</td>
+      <td class="c">${fmt(it.iva)}%</td>
+      <td class="r">${fmt(it.total)}</td>
+    </tr>`;
+  }).join('');
+
+  // bank
+  const bankH = b.bank ? `
+    <div class="d-bank">
+      <div class="d-bank-title">Contas de Tesouraria</div>
+      <div class="d-bank-body">
+        <div class="d-brow" style="grid-column:1/-1;font-weight:700">${esc(b.bank)} ${b.holder?'— '+esc(b.holder):''}</div>
+        ${b.acc   ? `<div class="d-brow">Número de conta: <span>${esc(b.acc)}</span></div>` : ''}
+        ${b.nib   ? `<div class="d-brow">NIB: <span>${esc(b.nib)}</span></div>` : ''}
+        ${b.nuib  ? `<div class="d-brow">NUIB: <span>${esc(b.nuib)}</span></div>` : ''}
+        ${b.swift ? `<div class="d-brow">Código Swift: <span>${esc(b.swift)}</span></div>` : ''}
+        ${b.iban  ? `<div class="d-brow" style="grid-column:1/-1">IBAN: <span>${esc(b.iban)}</span></div>` : ''}
+      </div>
+    </div>` : '';
+
+  const now = new Date();
+  const printedAt = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+  return `
+  <div class="d-header">
+    <div class="d-logo-wrap">
+      ${logoH}
+      <div class="d-co">
+        <h2>${esc(c.name||'Nome da Empresa')}</h2>
+        <p>
+          ${c.nuit  ? 'NUIT: '+esc(c.nuit)+'<br>' : ''}
+          ${c.addr  ? esc(c.addr)+'<br>' : ''}
+          ${c.email ? esc(c.email) : ''}${c.phone ? '<br>'+esc(c.phone) : ''}
+        </p>
+      </div>
+    </div>
+    <div class="d-right">
+      <div class="d-type">${cfg.lbl}</div>
+      <div class="d-orig">Original</div>
+      <div class="d-num">${esc(d.num||'—')}</div>
+    </div>
+  </div>
+
+  <div class="d-para">
+    <div class="d-para-lbl">Para:</div>
+    <div class="d-para-info">
+      ${esc(d.client.name||'—')}<br>
+      ${d.client.addr    ? esc(d.client.addr)+'<br>'    : ''}
+      ${d.client.nuit    ? 'NUIT: '+esc(d.client.nuit)+'<br>' : ''}
+      ${d.client.contact ? esc(d.client.contact)        : ''}
+    </div>
+    <div class="d-para-dates">
+      Data de emissão:&nbsp; ${fmtDate(d.date)}<br>
+      ${cfg.expLbl}:&nbsp; ${fmtDate(d.expire)}
+    </div>
+  </div>
+
+  <table class="d-table">
+    <thead>
+      <tr>
+        <th style="width:7%">Referência</th>
+        <th style="width:38%">Descrição</th>
+        <th class="c" style="width:7%">Quant.</th>
+        <th class="r" style="width:13%">Preço (MZN)</th>
+        <th class="c" style="width:8%">Desconto</th>
+        <th class="c" style="width:7%">IVA</th>
+        <th class="r" style="width:14%">Total (MZN)</th>
+      </tr>
+    </thead>
+    <tbody>${rowsH}</tbody>
+  </table>
+
+  <div class="d-bottom">
+    <div>
+      ${d.note ? `<div class="d-note"><strong>Nota:</strong>${esc(d.note)}</div>` : ''}
+    </div>
+    <div class="d-tots">
+      <div class="d-tot-row"><span>Subtotal:</span><span>${fmt(d.sub)} MZN</span></div>
+      <div class="d-tot-row"><span>Quantidade total:</span><span>${fmt(qty_total)}</span></div>
+      <div class="d-tot-row"><span>Desconto comercial:</span><span>${fmt(d.disc)} MZN</span></div>
+      <div class="d-tot-row"><span>Desconto financeiro:</span><span>0,00 MZN</span></div>
+      <div class="d-tot-row"><span>Base tributável:</span><span>${fmt(d.base)} MZN</span></div>
+      <div class="d-tot-row"><span>IVA:</span><span>${fmt(d.iva)} MZN</span></div>
+      <div class="d-tot-row grand"><span>Total com IVA:</span><span>${fmt(d.grand)} MZN</span></div>
+    </div>
+  </div>
+
+  <div class="d-extenso"><b>Valor por extenso: ${n2w(d.grand)}</b></div>
+
+  ${bankH}
+
+  <div class="d-footer">
+    <span>Impresso aos ${printedAt}${d.by ? ', Por '+esc(d.by) : ''}</span>
+    <span>${c.name ? esc(c.name) : ''}</span>
+    <span>Página 1 de 1</span>
+  </div>
+  <div class="d-processed">Documento processado por computador</div>
+  `;
+}
+
+/* ─── UTILS ──────────────────────────────────────────────── */
+function gi(id)   { return document.getElementById(id); }
+function gv(id)   { return (gi(id)?.value||'').trim(); }
+function esc(s)   { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+function pad(n)   { return String(n).padStart(2,'0'); }
+function fmt(n)   { return (parseFloat(n)||0).toLocaleString('pt-MZ',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtDate(d){ if(!d) return '—'; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; }
+function toast(msg){ const t=gi('toast-el'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+
+/* ─── NUMBER TO WORDS (PT) ───────────────────────────────── */
+function n2w(n){
+  n = Math.round(n*100)/100;
+  const ip=Math.floor(n), cp=Math.round((n-ip)*100);
+  let r = iw(ip)+(ip===1?' metical':' meticais');
+  if(cp>0) r += ' e '+iw(cp)+(cp===1?' centavo':' centavos');
+  return r.charAt(0).toUpperCase()+r.slice(1);
+}
+function iw(n){
+  if(n===0) return 'zero';
+  const O=['','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze','catorze','quinze','dezasseis','dezassete','dezoito','dezanove'];
+  const T=['','','vinte','trinta','quarenta','cinquenta','sessenta','setenta','oitenta','noventa'];
+  const H=['','cem','duzentos','trezentos','quatrocentos','quinhentos','seiscentos','setecentos','oitocentos','novecentos'];
+  if(n<20)   return O[n];
+  if(n<100)  return T[Math.floor(n/10)]+(n%10?' e '+O[n%10]:'');
+  if(n===100) return 'cem';
+  if(n<1000) return H[Math.floor(n/100)]+(n%100?' e '+iw(n%100):'');
+  if(n<1000000){ const t=Math.floor(n/1000),r=n%1000; return(t===1?'mil':iw(t)+' mil')+(r?(r<100?' e ':' ')+iw(r):''); }
+  const m=Math.floor(n/1000000),r=n%1000000;
+  return iw(m)+(m===1?' milhão':' milhões')+(r?(r<1000?' e ':' ')+iw(r):'');
+}
+</script>
+</body>
+</html>
+
